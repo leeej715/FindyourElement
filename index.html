@@ -2,857 +2,490 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Day Master Finder (10 Heavenly Stems)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Find Your Element</title>
+  <meta name="theme-color" content="#0b0c10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+
   <style>
     :root{
-      --bg:#0b0f19;
-      --panel:rgba(255,255,255,.06);
-      --line:rgba(255,255,255,.12);
-      --text:#eef3ff;
-      --muted:rgba(238,243,255,.72);
-      --accent:#7aa2ff;
-      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --bg:#0b0c10;
+      --card:#121420;
+      --line:#2a2f4a;
+      --text:#eaf0ff;
+      --muted:#b8c4ff;
+      --muted2:#94a3d6;
+      --btn:#1b2140;
+      --btn2:#10142a;
+      --focus:#7aa2ff;
       --radius:18px;
+      --ok:#72ffb0;
+      --err:#ff8a8a;
     }
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
       background:
-        radial-gradient(1200px 800px at 15% 10%, rgba(122,162,255,.20), transparent 55%),
-        radial-gradient(1000px 700px at 85% 15%, rgba(255,214,102,.12), transparent 60%),
+        radial-gradient(1200px 600px at 10% 0%, #121a3a 0%, transparent 55%),
+        radial-gradient(1000px 500px at 90% 10%, #1b1340 0%, transparent 60%),
         var(--bg);
-    }
-    .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    header{
-      display:flex; gap:14px; align-items:flex-end; justify-content:space-between;
-      padding:10px 0 18px; border-bottom:1px solid var(--line);
-    }
-    h1{margin:0;font-size:22px;letter-spacing:-.2px}
-    .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45}
-    .btn{
-      background:rgba(255,255,255,.10);
-      border:1px solid var(--line);
       color:var(--text);
-      border-radius:12px;
-      padding:10px 12px;
-      cursor:pointer;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
-    .btn:hover{background:rgba(255,255,255,.14)}
-    .layout{
-      display:grid;
-      grid-template-columns: 1.05fr 1fr;
-      gap:18px;
-      padding:18px 0 40px;
+    .wrap{ max-width: 900px; margin: 0 auto; padding: 18px 16px 28px; }
+    .header{ display:flex; flex-direction: column; gap: 8px; margin: 10px 0 14px; }
+    .title{
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 900;
+      letter-spacing: .2px;
+      line-height: 1.1;
+      margin:0;
+      display:flex;
+      align-items:baseline;
+      gap:12px;
+      flex-wrap:wrap;
     }
-    @media (max-width: 940px){ .layout{grid-template-columns:1fr} }
-
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+    .status{
+      font-size: 12px;
+      color: var(--muted2);
+      font-weight: 800;
       border:1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(0,0,0,.18);
+    }
+    .status.ok{ color: var(--ok); border-color: rgba(114,255,176,.35); }
+    .subtitle{
+      margin:0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .card{
+      background: rgba(18,20,32,.92);
+      border: 1px solid rgba(42,47,74,.75);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .phead{padding:14px 14px 10px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.10)}
-    .pbody{padding:14px}
-    label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}
-    input, select{
-      width:100%;
-      background: rgba(255,255,255,.06);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:11px 12px;
-      color:var(--text);
-      outline:none;
-    }
-    input::placeholder{color:rgba(238,243,255,.55)}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media (max-width:520px){ .row{grid-template-columns:1fr} }
-    .hint{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.45}
-    .toggle{
-      display:flex;gap:10px;align-items:flex-start;margin-top:10px;
-      padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.14);
-    }
-    .toggle input{width:auto;margin-top:2px}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .primary{
-      background: rgba(122,162,255,.20);
-      border-color: rgba(122,162,255,.45);
-    }
-    .primary:hover{background: rgba(122,162,255,.26)}
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:10px;
-      padding:14px;
-    }
-    @media (max-width:520px){ .cards{grid-template-columns:1fr} }
-    .cardBtn{
-      text-align:left;width:100%;
-      border-radius:16px;border:1px solid var(--line);
-      background: rgba(255,255,255,.06);
-      padding:12px 12px;
-      cursor:pointer;
-      display:flex;gap:10px;align-items:flex-start;
-    }
-    .cardBtn:hover{background: rgba(255,255,255,.09)}
-    .cardBtn[aria-current="true"]{
-      outline:2px solid rgba(122,162,255,.58);
-      background: rgba(122,162,255,.12);
-    }
-    .emoji{font-size:22px;line-height:1}
-    .title{font-size:15px;font-weight:800;letter-spacing:-.2px}
-    .meta{margin-top:4px;color:var(--muted);font-size:12px;line-height:1.35}
-    .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-    .tag{
-      font-size:12px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:6px 8px;
-      background:rgba(0,0,0,.16);
-      color:rgba(238,243,255,.92);
+      padding: 16px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.32);
+      backdrop-filter: blur(6px);
     }
 
-    .detail{padding:16px 16px 18px}
-    .hero{
-      display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;
-      padding-bottom:14px;border-bottom:1px solid var(--line);
+    .grid{ display:grid; gap: 12px; grid-template-columns: 1fr; }
+    .grid.three{ grid-template-columns: 1.2fr 1fr 1fr; }
+    @media (max-width: 520px){
+      .grid.three{ grid-template-columns: 1fr; }
     }
-    .heroLeft{display:flex;gap:12px;align-items:flex-start}
-    .heroEmoji{font-size:34px;line-height:1}
-    .heroTitle{margin:0;font-size:20px;letter-spacing:-.3px}
-    .heroSub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45}
-    .miniBtns{display:flex;gap:8px;align-items:center}
-    .smallBtn{
-      font-size:13px;padding:9px 10px;border-radius:12px;
-      border:1px solid var(--line);background: rgba(255,255,255,.08);cursor:pointer;
+
+    label{ display:block; font-size: 13px; color: var(--muted); margin: 2px 0 8px; }
+    input[type="text"]{
+      width:100%;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(42,47,74,.9);
+      background: var(--btn2);
+      color: var(--text);
+      font-size: 16px; /* iOS zoom 방지 */
+      outline: none;
     }
-    .smallBtn:hover{background: rgba(255,255,255,.12)}
-    .sections{display:grid;gap:12px;margin-top:14px}
-    .sec{
+    input[type="text"]:focus{
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgba(122,162,255,.20);
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    button{
+      width:100%;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(42,47,74,.9);
+      background: var(--btn);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 900;
+      cursor:pointer;
+      touch-action: manipulation;
+    }
+    button.secondary{
+      background: rgba(16,20,42,.55);
+      font-weight: 800;
+      color: var(--muted);
+    }
+    button:active{ transform: translateY(1px); }
+
+    .result{
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px dashed rgba(42,47,74,.9);
+      background: rgba(16,20,42,.55);
+      display:none;
+    }
+    .result.error{
+      border-style: solid;
+      border-color: rgba(255,138,138,.45);
+      background: rgba(255,138,138,.08);
+    }
+
+    .topline{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items:flex-start;
+      justify-content: space-between;
+    }
+    .big{
+      font-size: clamp(22px, 6vw, 36px);
+      font-weight: 950;
+      letter-spacing: .2px;
+      margin:0;
+      line-height: 1.05;
+    }
+    .mini{
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.3;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(42,47,74,.9);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; color: var(--text); }
+
+    .traits{
+      margin-top: 12px;
+      display:grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 760px){
+      .traits{ grid-template-columns: 1fr 1fr; }
+    }
+    .box{
+      border: 1px solid rgba(42,47,74,.7);
       background: rgba(0,0,0,.14);
-      border:1px solid var(--line);
-      border-radius: 16px;
-      padding:12px 12px;
+      border-radius: 14px;
+      padding: 12px;
     }
-    .sec h3{margin:0 0 8px;font-size:14px}
-    .sec ul{margin:0;padding-left:18px;line-height:1.45;color:rgba(238,243,255,.92)}
-    .sec li{margin:6px 0}
-    .resultBox{
-      margin-top:12px;
-      padding:12px 12px;
-      border-radius:16px;
-      border:1px solid rgba(122,162,255,.38);
-      background: rgba(122,162,255,.10);
+    .box h3{
+      margin:0 0 8px;
+      font-size: 14px;
+      letter-spacing:.2px;
+      color: var(--muted);
+      font-weight: 950;
     }
-    .resultTop{display:flex;gap:10px;align-items:flex-start}
-    .resultTop .big{font-size:28px;line-height:1}
-    .resultTop b{font-size:14px}
-    .resultTop div{color:var(--muted);font-size:12px;line-height:1.4;margin-top:4px}
-    footer{
-      margin-top:12px;padding-top:12px;border-top:1px solid var(--line);
-      color:rgba(238,243,255,.70);font-size:12px;line-height:1.5;
-    }
-    .toast{
-      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-      background: rgba(0,0,0,.55);
-      border: 1px solid rgba(255,255,255,.18);
-      padding: 10px 12px;border-radius: 999px;
-      color: var(--text);font-size: 13px;
-      display:none;z-index: 10;backdrop-filter: blur(10px);
+    ul{ margin:0; padding-left: 18px; color: var(--text); }
+    li{ margin: 6px 0; color: var(--text); }
+    .note{
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted2);
+      line-height: 1.35;
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <header>
-      <div>
-        <h1>Day Master Finder</h1>
-        <div class="sub">
-          Enter your birth info → get your <b>Day Master (Day Heavenly Stem)</b> and its traits.<br/>
-          This tool focuses on the <b>10 stems</b> (Jia…Gui / 갑목…계수).
+    <div class="header">
+      <h1 class="title">
+        Find Your Element
+        <span id="status" class="status">Status: Loading…</span>
+      </h1>
+
+      <p class="subtitle">
+        Enter your birth date to find your element and its traits.<br>
+        Tree(Wood) / Fire / Earth(Soil) / Metal(Gold) / Water.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="grid three">
+        <div>
+          <label for="birthYear">Year</label>
+          <input id="birthYear" type="text" inputmode="numeric" autocomplete="bday-year" placeholder="YYYY" />
+        </div>
+        <div>
+          <label for="birthMonth">Month</label>
+          <input id="birthMonth" type="text" inputmode="numeric" autocomplete="bday-month" placeholder="MM" />
+        </div>
+        <div>
+          <label for="birthDay">Day</label>
+          <input id="birthDay" type="text" inputmode="numeric" autocomplete="bday-day" placeholder="DD" />
         </div>
       </div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button class="btn" id="resetBtn" type="button">Reset</button>
+
+      <div class="actions">
+        <button id="calcBtn" type="button">Search</button>
+        <button id="resetBtn" class="secondary" type="button">Reset</button>
       </div>
-    </header>
 
-    <div class="layout">
-      <!-- LEFT: input + list -->
-      <section class="panel" aria-label="Input and list">
-        <div class="phead">
-          <div style="font-weight:800;letter-spacing:-.2px">1) Find your Day Master</div>
-          <div class="hint">
-            Tip: keep timezone correct. If you don’t know the exact birth time, set it to 12:00.
-          </div>
-        </div>
-        <div class="pbody">
-          <div class="row">
-            <div>
-              <label for="birthDate">Birth date</label>
-              <input id="birthDate" type="date" />
-            </div>
-            <div>
-              <label for="birthTime">Birth time</label>
-              <input id="birthTime" type="time" value="12:00" />
-            </div>
-          </div>
+      <div id="out" class="result"></div>
 
-          <div class="row">
-            <div>
-              <label for="tzOffset">Timezone (UTC offset)</label>
-              <select id="tzOffset"></select>
-            </div>
-            <div>
-              <label for="search">Search traits (optional)</label>
-              <input id="search" placeholder="e.g., leadership, detail, empathy, strategy, burnout…" />
-            </div>
-          </div>
-
-          <div class="toggle">
-            <input id="ziHourSwitch" type="checkbox" />
-            <div>
-              <div style="font-weight:750">Treat 23:00–00:59 as the next day</div>
-              <div class="hint" style="margin:6px 0 0">
-                Some BaZi schools switch the day pillar at the start of the Zi hour (23:00).
-                If you want the midnight-based rule, leave this off.
-              </div>
-            </div>
-          </div>
-
-          <div class="actions">
-            <button class="btn primary" id="calcBtn" type="button">Find my Day Master</button>
-            <button class="btn" id="copyResultBtn" type="button">Copy result text</button>
-          </div>
-
-          <div id="result" class="resultBox" style="display:none"></div>
-
-          <footer>
-            Notes:
-            <ul style="margin:8px 0 0;padding-left:18px">
-              <li>This is a practical Day Master calculator (day stem only), not a full BaZi chart.</li>
-              <li>Full accuracy in professional tools may involve solar terms / location / true solar time.</li>
-            </ul>
-          </footer>
-        </div>
-
-        <div class="phead" style="border-top:1px solid var(--line)">
-          <div style="font-weight:800;letter-spacing:-.2px">2) Browse the 10 Day Masters</div>
-          <div class="hint">Click a card to view details on the right.</div>
-        </div>
-        <div class="cards" id="cards" role="list"></div>
-      </section>
-
-      <!-- RIGHT: detail -->
-      <section class="panel" aria-label="Details">
-        <div class="detail" id="detail"></div>
-      </section>
+      <div class="note">
+        *This is a simple, presentation-friendly interpretation based on Day Master (day stem). For fun/education only.
+      </div>
     </div>
   </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  const statusEl = document.getElementById("status");
 
-  <script>
-    // ---------------------------
-    // Data (English)
-    // ---------------------------
-    const STEMS = [
-      {
-        id:"jia-wood",
-        ko:"갑목", label:"Jia Wood", hanja:"甲木",
-        element:"Wood", emoji:"🌳",
-        image:"Big tree / forest / pillar",
-        keywords:["growth","principles","leadership","protection","persistence","responsibility"],
-        oneLine:"A big tree type: grows steadily and becomes a strong support.",
-        strengths:[
-          "Steady leadership: takes responsibility and follows through",
-          "Strong principles: clear standards, builds trust",
-          "Long-term growth mindset: improves over time, durable output"
-        ],
-        pitfalls:[
-          "Stubbornness: can resist compromise",
-          "Slow-looking progress: big growth takes time",
-          "Over-responsibility: carrying everything alone can burn you out"
-        ],
-        worksWell:[
-          "Long-term projects, community building, training/education",
-          "Roles that need consistency + clear standards"
-        ],
-        relationships:[
-          "Loyal and protective; values promises",
-          "Flexibility (not lowering standards) keeps relationships smoother"
-        ]
-      },
-      {
-        id:"yi-wood",
-        ko:"을목", label:"Yi Wood", hanja:"乙木",
-        element:"Wood", emoji:"🌿",
-        image:"Vines / grass / flowers",
-        keywords:["flexibility","relationships","sense","adaptation","coordination","ideas"],
-        oneLine:"A vine/grass type: flexible, connecting, and good at blending in.",
-        strengths:[
-          "Adaptable: finds a path even in changing environments",
-          "Social sensitivity: reads context and moods well",
-          "Creative sense: strong taste and detail awareness"
-        ],
-        pitfalls:[
-          "Indecision: delaying choices due to over-consideration",
-          "Easily influenced: mood can shift with people/atmosphere",
-          "Weak boundaries: trouble saying no → energy drain"
-        ],
-        worksWell:[
-          "Collaboration-heavy work (planning, branding, editing, design)",
-          "Roles that connect people and content"
-        ],
-        relationships:[
-          "Warm and emotionally attentive—but can be easily hurt",
-          "Clear boundaries protect both you and the relationship"
-        ]
-      },
-      {
-        id:"bing-fire",
-        ko:"병화", label:"Bing Fire", hanja:"丙火",
-        element:"Fire", emoji:"☀️",
-        image:"Sun / daylight / big flame",
-        keywords:["presence","expression","drive","optimism","influence","lead"],
-        oneLine:"A sun type: bright, visible, and energizing to others.",
-        strengths:[
-          "Big presence: lifts the vibe, gathers people",
-          "Strong expression: good at speaking, persuading, creating content",
-          "Initiator energy: opens projects and pushes momentum"
-        ],
-        pitfalls:[
-          "Overheating: burnout after sprinting",
-          "Impatience: wants decisions fast",
-          "Too direct: honesty can feel sharp to others"
-        ],
-        worksWell:[
-          "Public-facing roles (teaching, hosting, media, marketing)",
-          "Leadership in project kickoffs and motivation"
-        ],
-        relationships:[
-          "Expressive and caring; gives a lot",
-          "Agree on pacing so you don’t overwhelm the other person"
-        ]
-      },
-      {
-        id:"ding-fire",
-        ko:"정화", label:"Ding Fire", hanja:"丁火",
-        element:"Fire", emoji:"🕯️",
-        image:"Candle / spotlight / ambience",
-        keywords:["sensitivity","focus","aesthetics","empathy","inspiration","mood"],
-        oneLine:"A candle type: subtle light, deep focus, and strong atmosphere.",
-        strengths:[
-          "Sensitive perception: catches nuance and emotion",
-          "Deep focus: raises quality through concentration",
-          "Aesthetic direction: tone, mood, storytelling detail"
-        ],
-        pitfalls:[
-          "Over-sensitivity: emotional fatigue",
-          "Perfectionism: restarting until it feels right",
-          "Approval anxiety: shaken by reactions"
-        ],
-        worksWell:[
-          "Editing, design, directing, writing, branding",
-          "Small-team quality owner roles"
-        ],
-        relationships:[
-          "Prefers deep emotional connection",
-          "When emotions spike: rest + distance helps you reset"
-        ]
-      },
-      {
-        id:"wu-earth",
-        ko:"무토", label:"Wu Earth", hanja:"戊土",
-        element:"Earth", emoji:"⛰️",
-        image:"Mountain / land / dam",
-        keywords:["stability","reliability","big-picture","containment","duty","support"],
-        oneLine:"A mountain type: stable, dependable, and good at holding structure.",
-        strengths:[
-          "Reliable: becomes the backbone in chaos",
-          "Big-picture thinking: sets direction and priorities",
-          "Capacity: can hold multiple interests/needs at once"
-        ],
-        pitfalls:[
-          "Resistance to change: prefers familiar systems",
-          "Detail blind spots: structure is strong but small errors can slip",
-          "Control tendency: ‘I must carry this’ can become heavy"
-        ],
-        worksWell:[
-          "Operations, PM/management, systems building",
-          "Long-term stable projects"
-        ],
-        relationships:[
-          "Shows care through action more than words",
-          "Respecting different styles reduces friction"
-        ]
-      },
-      {
-        id:"ji-earth",
-        ko:"기토", label:"Ji Earth", hanja:"己土",
-        element:"Earth", emoji:"🌾",
-        image:"Garden soil / fields / cultivation",
-        keywords:["practical","care","organize","process","details","maintenance"],
-        oneLine:"A garden-soil type: practical, nurturing, and detail-organized.",
-        strengths:[
-          "Operational skill: organizing, checking, process-building",
-          "Nurturing: supports people and routines well",
-          "Realistic execution: starts with what’s doable"
-        ],
-        pitfalls:[
-          "Over-worrying: stress from imagining risks",
-          "Sounds like nagging: because you notice many points",
-          "Sensitive to “bad air”: environment/people stress hits hard"
-        ],
-        worksWell:[
-          "Operations, scheduling, QA, editing checks, education/care work",
-          "Anything where small details decide outcomes"
-        ],
-        relationships:[
-          "Caring and attentive",
-          "You don’t have to manage everything—share the load"
-        ]
-      },
-      {
-        id:"geng-metal",
-        ko:"경금", label:"Geng Metal", hanja:"庚金",
-        element:"Metal", emoji:"⚔️",
-        image:"Steel / sword / raw metal",
-        keywords:["decisive","principled","direct","competitive","breakthrough","bold"],
-        oneLine:"A steel-sword type: decisive, straightforward, and breaks through blocks.",
-        strengths:[
-          "Decisive action: says/does what must be done",
-          "Breakthrough energy: cuts through obstacles",
-          "Strong justice sense: dislikes unfairness"
-        ],
-        pitfalls:[
-          "Too sharp: words can hurt unintentionally",
-          "Black-and-white thinking: gray zones feel uncomfortable",
-          "Conflict mode: competition can roughen relationships"
-        ],
-        worksWell:[
-          "Negotiation, leadership decisions, strategy, crisis response",
-          "Clear-standard environments"
-        ],
-        relationships:[
-          "Straightforward loyalty",
-          "Softening one tone often prevents big fights"
-        ]
-      },
-      {
-        id:"xin-metal",
-        ko:"신금", label:"Xin Metal", hanja:"辛金",
-        element:"Metal", emoji:"💎",
-        image:"Jewelry / refinement / precision",
-        keywords:["quality","taste","detail","standards","refined","craft"],
-        oneLine:"A jewel type: refined taste and high standards for finish.",
-        strengths:[
-          "Quality obsession (good way): pushes polish and completeness",
-          "Strong taste: styling, curation, subtle detail",
-          "Standards: sets a clear bar for output"
-        ],
-        pitfalls:[
-          "Perfectionism: slow satisfaction curve",
-          "Picky sensitivity: tiny flaws feel huge",
-          "Evaluation stress: cares about how it looks to others"
-        ],
-        worksWell:[
-          "Design, editing, branding, QC, curation",
-          "Work where detail becomes value"
-        ],
-        relationships:[
-          "Shows love through ‘best effort’",
-          "Sharing expectations prevents silent disappointment"
-        ]
-      },
-      {
-        id:"ren-water",
-        ko:"임수", label:"Ren Water", hanja:"壬水",
-        element:"Water", emoji:"🌊",
-        image:"Ocean / big river / flow",
-        keywords:["scale","flow","network","learning","expansion","fusion"],
-        oneLine:"An ocean type: expands, connects, and combines fields.",
-        strengths:[
-          "Scaling: grows networks and opportunities",
-          "Fast learning: absorbs new info and people quickly",
-          "Fusion thinking: mixes different worlds into a new plan"
-        ],
-        pitfalls:[
-          "Scattered focus: too many interests at once",
-          "Over-expansion: body/time can’t keep up",
-          "Emotional waves: when shaken, it can go deep"
-        ],
-        worksWell:[
-          "Planning, research, networking, global exchange, storytelling",
-          "Multi-field projects"
-        ],
-        relationships:[
-          "Needs freedom and flow",
-          "Write down agreements (time/money/roles) and you become unstoppable"
-        ]
-      },
-      {
-        id:"gui-water",
-        ko:"계수", label:"Gui Water", hanja:"癸水",
-        element:"Water", emoji:"🌧️",
-        image:"Rain / dew / mist / information",
-        keywords:["observation","analysis","language","precision","sensitivity","research"],
-        oneLine:"A rain/dew type: quiet, observant, and information-rich.",
-        strengths:[
-          "Observation: catches small signals and meaning",
-          "Language power: writing, story, records",
-          "Careful accuracy: reduces mistakes through preparation"
-        ],
-        pitfalls:[
-          "Anxiety loops: too many possibilities in the head",
-          "Distance: hiding feelings can cause misunderstandings",
-          "Energy drop: when drained, motivation can fall sharply"
-        ],
-        worksWell:[
-          "Writing/editing, research, data organization, planning",
-          "Any role where precision matters"
-        ],
-        relationships:[
-          "Builds trust slowly but deeply",
-          "Say worries out loud—silence creates unnecessary fear"
-        ]
+  function setStatusOk(){
+    statusEl.textContent = "Status: Ready";
+    statusEl.classList.add("ok");
+  }
+  function setStatusErr(msg){
+    statusEl.textContent = "Status: Error";
+    statusEl.classList.remove("ok");
+    console.error(msg);
+  }
+
+  try {
+    const STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+    const BRANCHES = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+
+    function mod(n, m){ return ((n % m) + m) % m; }
+
+    // Gregorian date -> Julian Day Number at noon (integer)
+    function jdnNoon(y, m, d){
+      const a = Math.floor((14 - m) / 12);
+      const y2 = y + 4800 - a;
+      const m2 = m + 12 * a - 3;
+      return d
+        + Math.floor((153 * m2 + 2) / 5)
+        + 365 * y2
+        + Math.floor(y2 / 4)
+        - Math.floor(y2 / 100)
+        + Math.floor(y2 / 400)
+        - 32045;
+    }
+
+    // T = 1 + mod(JD_noon - 1, 10)
+    // B = 1 + mod(JD_noon + 1, 12)
+    function dayPillarFromDate(y, m, d){
+      const jd = jdnNoon(y, m, d);
+      const T = 1 + mod(jd - 1, 10);
+      const B = 1 + mod(jd + 1, 12);
+      return { jd, stemIndex: T, branchIndex: B, pillar: STEMS[T-1] + BRANCHES[B-1] };
+    }
+
+    // Day Master (10) -> labels
+    function dayMasterInfo(T){
+      switch (T){
+        case 1:  return { element:"Wood(Tree)",        emoji:"🌳", roman:"Jia",  han:"甲木", ko:"갑목" };
+        case 2:  return { element:"Wood(Grass)",       emoji:"🌿", roman:"Yi",   han:"乙木", ko:"을목" };
+        case 3:  return { element:"Fire(Sun)",         emoji:"🔥", roman:"Bing", han:"丙火", ko:"병화" };
+        case 4:  return { element:"Fire(Candle)",      emoji:"🕯️", roman:"Ding", han:"丁火", ko:"정화" };
+        case 5:  return { element:"Earth(Soil)",       emoji:"🌎", roman:"Wu",   han:"戊土", ko:"무토" };
+        case 6:  return { element:"Earth(Farmland)",   emoji:"🟤", roman:"Ji",   han:"己土", ko:"기토" };
+        case 7:  return { element:"Metal(steel)",      emoji:"🪙", roman:"Geng", han:"庚金", ko:"경금" };
+        case 8:  return { element:"Metal(jewel)",      emoji:"💎", roman:"Xin",  han:"辛金", ko:"신금" };
+        case 9:  return { element:"Water(Ocean)",      emoji:"🌊", roman:"Ren",  han:"壬水", ko:"임수" };
+        case 10: return { element:"Water(River)",      emoji:"💧", roman:"Gui",  han:"癸水", ko:"계수" };
+        default: return { element:"", emoji:"", roman:"", han:"", ko:"" };
       }
-    ];
-
-    // ---------------------------
-    // UI helpers
-    // ---------------------------
-    const $ = (sel) => document.querySelector(sel);
-    const cards = $("#cards");
-    const detail = $("#detail");
-    const search = $("#search");
-    const birthDate = $("#birthDate");
-    const birthTime = $("#birthTime");
-    const tzOffset = $("#tzOffset");
-    const ziHourSwitch = $("#ziHourSwitch");
-    const calcBtn = $("#calcBtn");
-    const resetBtn = $("#resetBtn");
-    const result = $("#result");
-    const toast = $("#toast");
-    const copyResultBtn = $("#copyResultBtn");
-
-    let state = { q:"", selectedId: STEMS[0].id, computedId: null };
-
-    function showToast(msg){
-      toast.textContent = msg;
-      toast.style.display = "block";
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(()=> toast.style.display="none", 1400);
     }
-    function mod(n,m){ return ((n % m) + m) % m; }
 
-    // Fill timezone dropdown (UTC-12:00 .. UTC+14:00)
-    function pad2(n){ return String(n).padStart(2,"0"); }
-    function minutesToLabel(mins){
-      const sign = mins >= 0 ? "+" : "-";
-      const a = Math.abs(mins);
-      const hh = Math.floor(a/60);
-      const mm = a % 60;
-      return `UTC${sign}${pad2(hh)}:${pad2(mm)}`;
-    }
-    function buildTzOptions(){
-      tzOffset.innerHTML = "";
-      for(let mins=-12*60; mins<=14*60; mins+=30){
-        const opt = document.createElement("option");
-        opt.value = String(mins);
-        opt.textContent = minutesToLabel(mins);
-        tzOffset.appendChild(opt);
+    // 5 Elements traits (presentation-friendly)
+    const ELEMENT_TRAITS = {
+      Tree: {
+        title: "Tree (Wood)",
+        emoji: "🌳",
+        tagline: "Growth, direction, and creativity.",
+        strengths: ["Curious, improving, future-oriented", "Good at starting projects", "Values principles and fairness"],
+        watchouts: ["Can be impatient or stubborn", "May push too hard without rest", "Gets stressed when blocked"],
+        tips: ["Move your body to release tension", "Break goals into small steps", "Create space: time, budget, boundaries"]
+      },
+      Fire: {
+        title: "Fire",
+        emoji: "🔥",
+        tagline: "Energy, warmth, and expression.",
+        strengths: ["Charismatic, expressive, inspiring", "Fast decision-maker", "Brings people together"],
+        watchouts: ["Can burn out easily", "Emotions can rise quickly", "May rush or overpromise"],
+        tips: ["Schedule recovery time", "Finish one thing before adding more", "Use simple routines to stay grounded"]
+      },
+      Earth: {
+        title: "Earth (Soil)",
+        emoji: "🌎",
+        tagline: "Stability, care, and support.",
+        strengths: ["Reliable, practical, supportive", "Good at maintaining systems", "Patient with people"],
+        watchouts: ["Overthinking and worry", "Can carry others’ burdens", "May resist change too long"],
+        tips: ["Set clear ‘helping’ limits", "Keep your space organized", "Practice saying ‘no’ kindly"]
+      },
+      Metal: {
+        title: "Metal (Gold)",
+        emoji: "🪙",
+        tagline: "Structure, clarity, and precision.",
+        strengths: ["Clear standards, strong focus", "Good at editing, refining, finishing", "Values truth and integrity"],
+        watchouts: ["Too strict or self-critical", "Can seem cold or distant", "Perfectionism delays action"],
+        tips: ["Aim for ‘done’, not ‘perfect’", "Use checklists and deadlines", "Balance logic with softness"]
+      },
+      Water: {
+        title: "Water",
+        emoji: "🌊",
+        tagline: "Insight, flexibility, and depth.",
+        strengths: ["Intuitive, thoughtful, adaptable", "Good listener, deep research skills", "Sees hidden connections"],
+        watchouts: ["Can drift or procrastinate", "Fear and anxiety can grow", "Avoids conflict too much"],
+        tips: ["Make decisions with time limits", "Use small daily actions", "Talk it out instead of holding it in"]
       }
-      // Default: Asia/Manila = UTC+08:00
-      tzOffset.value = String(8*60);
+    };
+
+    function fiveElementFromStemIndex(T){
+      // 1-2 wood, 3-4 fire, 5-6 earth, 7-8 metal, 9-10 water
+      if (T === 1 || T === 2) return "Tree";
+      if (T === 3 || T === 4) return "Fire";
+      if (T === 5 || T === 6) return "Earth";
+      if (T === 7 || T === 8) return "Metal";
+      return "Water";
     }
 
-    // ---------------------------
-    // Day Master calculation
-    // ---------------------------
-    /*
-      We compute JD (Julian Date) from JavaScript time:
-      JD_UT = (unix_ms / 86400000) + 2440587.5
-      Then shift to a timezone-based JD so that LOCAL NOON is an integer day count.
-      From a known mapping:
-        Stem number T = 1 + mod(JD_noon - 1, 10)
-      Where JD_noon is the Julian date at local noon (integer in that timezone).
-      Reference derivation and formulas: https://ytliu0.github.io/ChineseCalendar/sexagenary.html
-    */
-    function jdFromUnixMs(unixMs){
-      return (unixMs / 86400000) + 2440587.5;
+    function toInt(v){ return Number(String(v).trim()); }
+
+    function isValidDate(y, m, d){
+      if (!Number.isInteger(y) || !Number.isInteger(m) || !Number.isInteger(d)) return false;
+      if (y < 1800 || y > 2200) return false;
+      if (m < 1 || m > 12) return false;
+      if (d < 1 || d > 31) return false;
+      const dt = new Date(Date.UTC(y, m - 1, d));
+      return dt.getUTCFullYear() === y && (dt.getUTCMonth() + 1) === m && dt.getUTCDate() === d;
     }
 
-    function localDatePartsFromISO(iso){
-      const [y,m,d] = iso.split("-").map(Number);
-      return {y, m, d};
+    const birthYear = document.getElementById("birthYear");
+    const birthMonth = document.getElementById("birthMonth");
+    const birthDay = document.getElementById("birthDay");
+    const out = document.getElementById("out");
+    const calcBtn = document.getElementById("calcBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    function showError(msg){
+      out.classList.add("error");
+      out.style.display = "block";
+      out.innerHTML = `<div style="color:var(--err);font-weight:950;">${msg}</div>`;
     }
 
-    function parseTimeParts(t){
-      if(!t) return {hh:12, mm:0};
-      const [hh,mm] = t.split(":").map(Number);
-      return {hh, mm};
+    function showResult(html){
+      out.classList.remove("error");
+      out.style.display = "block";
+      out.innerHTML = html;
     }
 
-    function addDaysYMD(y,m,d,delta){
-      const dt = new Date(Date.UTC(y, m-1, d, 0, 0, 0));
-      dt.setUTCDate(dt.getUTCDate() + delta);
-      return { y: dt.getUTCFullYear(), m: dt.getUTCMonth()+1, d: dt.getUTCDate() };
+    function listHTML(arr){
+      return `<ul>${arr.map(x => `<li>${x}</li>`).join("")}</ul>`;
     }
 
-    function stemFromBirthInput(){
-      const iso = birthDate.value;
-      if(!iso) return null;
+    function calculate(){
+      try{
+        out.style.display = "none";
+        out.innerHTML = "";
+        out.classList.remove("error");
 
-      const {y, m, d} = localDatePartsFromISO(iso);
-      const {hh, mm} = parseTimeParts(birthTime.value);
-      const tzMins = parseInt(tzOffset.value, 10) || 0;
+        const y = toInt(birthYear.value);
+        const m = toInt(birthMonth.value);
+        const d = toInt(birthDay.value);
 
-      // Optional: Zi-hour day switch (23:00–00:59 treated as next day)
-      let adj = {y, m, d};
-      if(ziHourSwitch.checked && hh >= 23){
-        adj = addDaysYMD(y,m,d,1);
-      }
+        if (!birthYear.value || !birthMonth.value || !birthDay.value){
+          showError("Please enter Year, Month, and Day.");
+          return;
+        }
+        if (!isValidDate(y, m, d)){
+          showError("Invalid date. Please check Year / Month / Day.");
+          return;
+        }
 
-      // Build UTC timestamp for LOCAL NOON of adjusted date
-      // local noon = 12:00 at timezone offset tzMins
-      const unixMsNoonUTC = Date.UTC(adj.y, adj.m-1, adj.d, 12, 0, 0) - (tzMins * 60 * 1000);
+        const day = dayPillarFromDate(y, m, d);
+        const dm = dayMasterInfo(day.stemIndex);
+        const five = fiveElementFromStemIndex(day.stemIndex);
+        const traits = ELEMENT_TRAITS[five];
+        const dayStem = STEMS[day.stemIndex - 1];
 
-      // JD in UTC
-      const jdUT = jdFromUnixMs(unixMsNoonUTC);
-
-      // Shift to timezone-based JD where local noon is integer
-      const jdTz = jdUT + (tzMins / 1440);
-
-      // JD_noon should be an integer (floating errors possible)
-      const jdNoon = Math.round(jdTz);
-
-      // Stem number T (1..10): 1 Jia, 2 Yi, 3 Bing, 4 Ding, 5 Wu, 6 Ji, 7 Geng, 8 Xin, 9 Ren, 10 Gui
-      const T = 1 + mod((jdNoon - 1), 10);
-
-      const stemIdByT = {
-        1:"jia-wood", 2:"yi-wood", 3:"bing-fire", 4:"ding-fire", 5:"wu-earth",
-        6:"ji-earth", 7:"geng-metal", 8:"xin-metal", 9:"ren-water", 10:"gui-water"
-      };
-
-      return {
-        stem: STEMS.find(s => s.id === stemIdByT[T]),
-        debug: { adjustedDate: adj, jdNoon, T, tzMins }
-      };
-    }
-
-    // ---------------------------
-    // Rendering
-    // ---------------------------
-    function matchesStem(s, q){
-      if(!q) return true;
-      const t = q.toLowerCase();
-      const hay = [
-        s.label, s.hanja, s.ko, s.element, s.image, s.oneLine,
-        ...s.keywords, ...s.strengths, ...s.pitfalls, ...s.worksWell, ...s.relationships
-      ].join(" ").toLowerCase();
-      return hay.includes(t);
-    }
-
-    function filteredStems(){
-      return STEMS.filter(s => matchesStem(s, state.q));
-    }
-
-    function setHash(id){
-      history.replaceState(null, "", `#${id}`);
-    }
-    function getFromHash(){
-      const id = (location.hash || "").replace("#","").trim();
-      return STEMS.find(s => s.id === id) ? id : null;
-    }
-
-    function renderCards(){
-      cards.innerHTML = "";
-      const list = filteredStems();
-
-      if(!list.length){
-        const div = document.createElement("div");
-        div.style.padding = "12px";
-        div.style.color = "rgba(238,243,255,.85)";
-        div.textContent = "No results. Try another search term.";
-        cards.appendChild(div);
-        return;
-      }
-
-      list.forEach(s => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "cardBtn";
-        const isCurrent = s.id === state.selectedId;
-        btn.setAttribute("aria-current", String(isCurrent));
-
-        const isComputed = s.id === state.computedId;
-        const computedBadge = isComputed ? `<span class="tag" style="border-color:rgba(122,162,255,.55);background:rgba(122,162,255,.16)">Your result</span>` : "";
-
-        btn.innerHTML = `
-          <div class="emoji" aria-hidden="true">${s.emoji}</div>
-          <div>
-            <div class="title">${s.label} <span style="opacity:.75;font-weight:700">(${s.hanja})</span>
-              <span style="opacity:.65;font-weight:700"> / ${s.ko}</span>
-            </div>
-            <div class="meta">${s.image} · ${s.element} · ${s.oneLine}</div>
-            <div class="tags">
-              ${computedBadge}
-              ${s.keywords.slice(0,3).map(k => `<span class="tag">${k}</span>`).join("")}
-            </div>
-          </div>
-        `;
-        btn.addEventListener("click", () => {
-          state.selectedId = s.id;
-          setHash(s.id);
-          renderDetail();
-          renderCards();
-        });
-        cards.appendChild(btn);
-      });
-    }
-
-    function renderDetail(){
-      const s = STEMS.find(x => x.id === state.selectedId) || STEMS[0];
-
-      detail.innerHTML = `
-        <div class="hero">
-          <div class="heroLeft">
-            <div class="heroEmoji" aria-hidden="true">${s.emoji}</div>
+        showResult(`
+          <div class="topline">
             <div>
-              <h2 class="heroTitle">${s.label} <span style="opacity:.75;font-weight:750">(${s.hanja})</span></h2>
-              <div class="heroSub">
-                <b>${s.oneLine}</b><br/>
-                Image: ${s.image} · Element: ${s.element}<br/>
-                Keywords: ${s.keywords.join(", ")}
+              <p class="big">${traits.emoji} ${traits.title}</p>
+              <div class="mini">${traits.tagline}</div>
+              <div class="mini" style="margin-top:10px;">
+                Day Master: <span class="mono">${dm.roman}</span>
+                (<span class="mono">${dm.han}</span> · ${dm.ko})
               </div>
             </div>
+            <span class="pill">Day Stem: <span class="mono">${dayStem}</span></span>
           </div>
-          <div class="miniBtns">
-            <button class="smallBtn" type="button" id="copyLinkBtn">Copy link</button>
-          </div>
-        </div>
 
-        <div class="sections">
-          <div class="sec">
-            <h3>Strengths (when balanced)</h3>
-            <ul>${s.strengths.map(x => `<li>${x}</li>`).join("")}</ul>
+          <div class="traits">
+            <div class="box">
+              <h3>Strengths</h3>
+              ${listHTML(traits.strengths)}
+            </div>
+            <div class="box">
+              <h3>Watch-outs</h3>
+              ${listHTML(traits.watchouts)}
+            </div>
+            <div class="box" style="grid-column: 1 / -1;">
+              <h3>Simple tips</h3>
+              ${listHTML(traits.tips)}
+            </div>
           </div>
-          <div class="sec">
-            <h3>Pitfalls (when out of balance)</h3>
-            <ul>${s.pitfalls.map(x => `<li>${x}</li>`).join("")}</ul>
-          </div>
-          <div class="sec">
-            <h3>Good fits (work & direction)</h3>
-            <ul>${s.worksWell.map(x => `<li>${x}</li>`).join("")}</ul>
-          </div>
-          <div class="sec">
-            <h3>Relationship notes</h3>
-            <ul>${s.relationships.map(x => `<li>${x}</li>`).join("")}</ul>
-          </div>
-        </div>
-      `;
+        `);
+      }catch(e){
+        showError("Calculation failed. (Open console for details)");
+        console.error(e);
+      }
+    }
 
-      $("#copyLinkBtn").addEventListener("click", async () => {
-        try{
-          await navigator.clipboard.writeText(location.href);
-          showToast("Link copied");
-        }catch(e){
-          showToast("Copy failed (check browser permissions)");
-        }
+    function resetAll(){
+      birthYear.value = "";
+      birthMonth.value = "";
+      birthDay.value = "";
+      out.style.display = "none";
+      out.innerHTML = "";
+      out.classList.remove("error");
+    }
+
+    function digitsOnly(el, maxLen){
+      el.addEventListener("input", () => {
+        el.value = el.value.replace(/\D/g, "").slice(0, maxLen);
       });
     }
 
-    function renderResultBox(stem, debug){
-      const { adjustedDate, jdNoon, T, tzMins } = debug;
-      const tzLabel = minutesToLabel(tzMins);
-      result.style.display = "block";
-      result.innerHTML = `
-        <div class="resultTop">
-          <div class="big" aria-hidden="true">${stem.emoji}</div>
-          <div>
-            <b>Your Day Master: ${stem.label} (${stem.hanja}) / ${stem.ko}</b>
-            <div>
-              Adjusted date used for the day pillar: ${adjustedDate.y}-${pad2(adjustedDate.m)}-${pad2(adjustedDate.d)} · ${tzLabel}<br/>
-              (Stem #${T} from JD_noon=${jdNoon})
-            </div>
-          </div>
-        </div>
-      `;
-    }
+    digitsOnly(birthYear, 4);
+    digitsOnly(birthMonth, 2);
+    digitsOnly(birthDay, 2);
 
-    function runCalculation(){
-      const out = stemFromBirthInput();
-      if(!out){
-        showToast("Please select a birth date.");
-        return;
-      }
-      const { stem, debug } = out;
+    // Button only (no auto-calc)
+    calcBtn.addEventListener("click", calculate);
+    resetBtn.addEventListener("click", resetAll);
 
-      state.computedId = stem.id;
-      state.selectedId = stem.id;
-      setHash(stem.id);
-
-      renderResultBox(stem, debug);
-      renderCards();
-      renderDetail();
-
-      // scroll a bit to show the result
-      result.scrollIntoView({ behavior:"smooth", block:"start" });
-    }
-
-    function copyResultText(){
-      if(!state.computedId){
-        showToast("Run the calculator first.");
-        return;
-      }
-      const s = STEMS.find(x => x.id === state.computedId);
-      const text = `My Day Master is ${s.label} (${s.hanja}) / ${s.ko}. Keywords: ${s.keywords.join(", ")}.`;
-      navigator.clipboard.writeText(text).then(()=>showToast("Result copied"));
-    }
-
-    // ---------------------------
-    // Events + init
-    // ---------------------------
-    buildTzOptions();
-
-    search.addEventListener("input", (e) => {
-      state.q = e.target.value.trim();
-      const list = filteredStems();
-      if(!list.find(x => x.id === state.selectedId)){
-        state.selectedId = list[0]?.id || STEMS[0].id;
-        setHash(state.selectedId);
-      }
-      renderCards();
-      renderDetail();
+    // Enter key triggers search
+    [birthYear, birthMonth, birthDay].forEach(el => {
+      el.addEventListener("keydown", (e) => { if (e.key === "Enter") calculate(); });
     });
 
-    calcBtn.addEventListener("click", runCalculation);
-    copyResultBtn.addEventListener("click", copyResultText);
-
-    resetBtn.addEventListener("click", () => {
-      state = { q:"", selectedId: STEMS[0].id, computedId: null };
-      search.value = "";
-      birthDate.value = "";
-      birthTime.value = "12:00";
-      tzOffset.value = String(8*60);
-      ziHourSwitch.checked = false;
-      result.style.display = "none";
-      setHash(state.selectedId);
-      renderCards();
-      renderDetail();
-      showToast("Reset done");
-    });
-
-    // Hash init
-    const initial = getFromHash() || STEMS[0].id;
-    state.selectedId = initial;
-    renderCards();
-    renderDetail();
-  </script>
+    setStatusOk();
+  } catch (e) {
+    setStatusErr(e);
+  }
+})();
+</script>
 </body>
 </html>
