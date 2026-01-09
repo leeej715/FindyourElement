@@ -212,7 +212,7 @@
       </h1>
 
       <p class="subtitle">
-        Enter your birth date to find your Day Master (10 types) and its traits.
+        Enter your birth date to find your Day Master (10 types), traits, and recommended careers.
       </p>
     </div>
 
@@ -288,7 +288,7 @@
       return { jd, stemIndex: T, branchIndex: B, pillar: STEMS[T-1] + BRANCHES[B-1] };
     }
 
-    // ✅ updated emojis & labels
+    // Day Master label + emoji
     function dayMasterInfo(T){
       switch (T){
         case 1:  return { element:"Wood(Tree)",       emoji:"🌳",  roman:"Jia",  han:"甲木", ko:"갑목" };
@@ -305,57 +305,346 @@
       }
     }
 
-    // 10 traits (one per Day Master)
+    // Expanded 10 traits + recommended careers
     const DAYMASTER_TRAITS = {
-      1: { title:"Jia (甲木) — Wood(Tree)", subtitle:"Big tree energy: upright and protective.",
-           strengths:["Strong principles, fair-minded", "Protective leadership", "Long-term thinker"],
-           watchouts:["Stubborn when challenged", "Gets rigid under stress", "May ignore small details"],
-           tips:["Practice flexibility: allow small compromises", "Delegate, don’t carry everything", "Build routines, not just big goals"]
+      1: {
+        subtitle: "Big tree energy: upright, protective, and built for long-term growth.",
+        strengths: [
+          "Strong principles; values fairness and responsibility",
+          "Protective leadership; naturally supports others",
+          "Long-term planner; good at building foundations",
+          "Resilient under pressure; steady commitment",
+          "Clear direction; good at setting boundaries and structure"
+        ],
+        watchouts: [
+          "Can be stubborn or rigid when challenged",
+          "May push forward even when the timing isn’t right",
+          "Dislikes being controlled; clashes with authority easily",
+          "Can ignore small details while focusing on the big picture",
+          "Under stress: becomes blunt, inflexible, or emotionally distant"
+        ],
+        tips: [
+          "Practice flexibility: allow small adjustments without feeling “defeated”",
+          "Break big goals into weekly checkpoints (not just one huge target)",
+          "Delegate—don’t carry everything alone",
+          "When blocked, change strategy instead of forcing the same route",
+          "Add recovery routines (sleep, stretching, walking) to avoid “hardening”"
+        ],
+        careers: [
+          "Leadership / Management",
+          "Project or Operations Management",
+          "Architecture / Urban planning",
+          "Law / Policy / Public administration",
+          "Education / Mentoring",
+          "Nonprofit / Community leadership",
+          "Construction / Real estate (planning side)"
+        ]
       },
-      2: { title:"Yi (乙木) — Wood(Grass)", subtitle:"Grass & vines: adaptable and sensitive.",
-           strengths:["Flexible, social intelligence", "Good at networking and supporting", "Creative problem solver"],
-           watchouts:["People-pleasing", "Easily affected by environment", "Indecisive when options are many"],
-           tips:["Set clear boundaries", "Decide with a time limit", "Choose one priority per day"]
+
+      2: {
+        subtitle: "Grass & vines: flexible, sensitive, and great at connecting people.",
+        strengths: [
+          "Adaptable; finds a way around obstacles",
+          "Strong social intuition; good at reading the room",
+          "Supportive collaborator; builds networks naturally",
+          "Creative problem-solver; works well with limited resources",
+          "Learns fast by observing and copying best practices"
+        ],
+        watchouts: [
+          "People-pleasing; struggles to say “no”",
+          "Easily influenced by environment and mood",
+          "Indecisive when too many options exist",
+          "Avoids direct conflict; may become passive-aggressive",
+          "Under stress: overthinks relationships and second-guesses choices"
+        ],
+        tips: [
+          "Set one clear priority for the day (and protect it)",
+          "Use decision rules: ‘If it’s 70% good, choose it’",
+          "Practice honest boundaries: kind but direct",
+          "Change environments when stuck (walk, new place, new input)",
+          "Track progress weekly to avoid drifting"
+        ],
+        careers: [
+          "Design / Creative roles",
+          "Writing / Content / Copy",
+          "HR / People operations",
+          "Community manager / Partnership",
+          "Marketing (relationship-driven)",
+          "Counseling / Coaching (support-focused)",
+          "Customer success / Client relations"
+        ]
       },
-      3: { title:"Bing (丙火) — Fire(Sun)", subtitle:"Sun: bright, bold, and visible.",
-           strengths:["Charismatic, expressive", "Fast starter, energizes others", "Big-picture confidence"],
-           watchouts:["Burnout from overdoing", "Can be blunt or too direct", "Starts a lot, finishes less"],
-           tips:["Schedule rest like a task", "Finish one thing before adding more", "Use checklists to land the ending"]
+
+      3: {
+        subtitle: "Sun: bright, bold, and visible—naturally energizes the room.",
+        strengths: [
+          "Charismatic and expressive; inspires others quickly",
+          "Fast starter; strong momentum and confidence",
+          "Big-picture thinking; sees possibilities",
+          "Warm leadership; good at motivating teams",
+          "Optimistic under pressure; rebounds quickly"
+        ],
+        watchouts: [
+          "Burnout from overcommitting and moving too fast",
+          "Can be blunt; words may come out too strong",
+          "Starts many things but may struggle to finish",
+          "Needs attention/feedback; gets impatient without response",
+          "Under stress: becomes dramatic, impulsive, or scattered"
+        ],
+        tips: [
+          "Schedule rest like a real appointment (non-negotiable)",
+          "Finish one task before starting a new one (one-in/one-out rule)",
+          "Use simple checklists to secure follow-through",
+          "Before speaking, ask: ‘Will this help or heat up the room?’",
+          "Pace yourself: short sprints + planned cooldown"
+        ],
+        careers: [
+          "Public speaking / MC / Host",
+          "PR / Brand / Marketing",
+          "Sales / Business development",
+          "Entrepreneur / Startup roles",
+          "Teaching (performance-based)",
+          "Entertainment / Media",
+          "Event planning / Producing"
+        ]
       },
-      4: { title:"Ding (丁火) — Fire(Candle)", subtitle:"Candle: warm, focused, and refined.",
-           strengths:["Insightful, precise expression", "Good at teaching / guiding", "Creates cozy atmosphere"],
-           watchouts:["Over-sensitive to criticism", "Overthinking emotions", "Can dim self to avoid conflict"],
-           tips:["Name your needs clearly", "Protect your energy (sleep/food)", "Practice small courageous actions"]
+
+      4: {
+        subtitle: "Candle: warm, focused, and refined—good at guiding with subtlety.",
+        strengths: [
+          "Sharp intuition; senses hidden feelings and context",
+          "Focused attention; good at details and finishing touches",
+          "Natural mentor/teacher; explains gently and clearly",
+          "Creates emotional warmth; builds trust quickly",
+          "Refined taste; strong sense of meaning and mood"
+        ],
+        watchouts: [
+          "Sensitive to criticism; confidence fluctuates",
+          "Overthinks emotions; can get stuck in rumination",
+          "May dim self-expression to avoid conflict",
+          "Energy can drop suddenly (mood-based productivity)",
+          "Under stress: withdraws, becomes anxious, or silently resentful"
+        ],
+        tips: [
+          "Protect your flame: sleep, regular meals, and quiet time",
+          "Name your needs directly (small honest sentences work best)",
+          "Use ‘one scene at a time’ thinking to avoid overwhelm",
+          "Limit overanalysis: set a timer for thinking/reflecting",
+          "Keep a small creative habit to stabilize confidence"
+        ],
+        careers: [
+          "Editing / Proofreading",
+          "Therapy / Counseling (gentle guidance)",
+          "UX writing / Content design",
+          "Curating / Exhibition / Cultural work",
+          "Teaching / Tutoring (one-on-one)",
+          "Craft / Art / Photography",
+          "Research (detail-sensitive)"
+        ]
       },
-      5: { title:"Wu (戊土) — Earth(Soil)", subtitle:"Mountain: stable and dependable.",
-           strengths:["Reliable, grounded leadership", "Good at building systems", "Calm in crisis"],
-           watchouts:["Resists change too long", "Can become controlling", "Emotional heaviness / worry"],
-           tips:["Try ‘small change experiments’", "Ask for help earlier", "Move daily to release stuck energy"]
+
+      5: {
+        subtitle: "Mountain: stable and dependable—built to carry responsibility and structure.",
+        strengths: [
+          "Reliable leadership; steady in crises",
+          "Good at building systems and maintaining order",
+          "Strong endurance; doesn’t quit easily",
+          "Protective and loyal; people trust you",
+          "Practical judgment; sees what is realistic"
+        ],
+        watchouts: [
+          "Resists change; can become too conservative",
+          "May hold control tightly when worried",
+          "Carries burdens silently; stress accumulates",
+          "Can be emotionally heavy or pessimistic under pressure",
+          "Under stress: stubborn, defensive, or unresponsive"
+        ],
+        tips: [
+          "Try ‘small experiments’ instead of one big risky change",
+          "Delegate earlier—don’t wait until you’re exhausted",
+          "Move daily (walks, stretching) to release stuck tension",
+          "Write worries down, then turn them into next actions",
+          "Practice flexibility: adjust plan, not your values"
+        ],
+        careers: [
+          "Engineering / Construction management",
+          "Operations / Logistics",
+          "Government / Administration",
+          "Real estate / Infrastructure",
+          "Project management (large scope)",
+          "Risk management / Compliance",
+          "Supply chain / Planning"
+        ]
       },
-      6: { title:"Ji (己土) — Earth(Farmland)", subtitle:"Field: nurturing, practical care.",
-           strengths:["Supportive, service-minded", "Organizes resources well", "Patient with people"],
-           watchouts:["Takes on others’ burdens", "Over-prepares, delays action", "Needs reassurance"],
-           tips:["Set ‘helping limits’", "Start before you feel ready", "Keep your space and schedule simple"]
+
+      6: {
+        subtitle: "Farmland: nurturing, practical care—great at growing results step by step.",
+        strengths: [
+          "Supportive and service-minded; strong caretaking instinct",
+          "Good at organizing resources and routines",
+          "Patient builder; improves things steadily",
+          "Practical empathy; helps in realistic ways",
+          "Skilled at maintaining harmony and daily life systems"
+        ],
+        watchouts: [
+          "Over-caretaking; takes on others’ problems",
+          "Worry loops; over-prepares and delays action",
+          "Can undervalue self; waits for reassurance",
+          "Difficulty setting boundaries with needy people",
+          "Under stress: procrastination, guilt, and mental clutter"
+        ],
+        tips: [
+          "Set ‘helping limits’: time, money, emotional capacity",
+          "Start before perfect—do a 10-minute first step",
+          "Keep your space and schedule simple (less clutter, less worry)",
+          "Use a daily ‘top 3’ list to prevent overplanning",
+          "Practice saying ‘no’ kindly and consistently"
+        ],
+        careers: [
+          "Healthcare / Nursing / Care work",
+          "Education (support & routine-based)",
+          "Accounting / Administration",
+          "Operations support / Coordinator",
+          "Nutrition / Wellness (practical care)",
+          "Customer success / Service roles",
+          "Agriculture / Food-related work"
+        ]
       },
-      7: { title:"Geng (庚金) — Metal(Steel)", subtitle:"Steel: decisive and strong-cutting.",
-           strengths:["Brave, action-oriented", "Cuts through confusion", "Strong willpower"],
-           watchouts:["Too harsh or impatient", "Conflict-prone", "All-or-nothing mindset"],
-           tips:["Pause 10 seconds before reacting", "Aim for ‘firm but kind’ words", "Add recovery time after intense pushes"]
+
+      7: {
+        subtitle: "Steel: decisive and powerful—cuts through confusion and acts fast.",
+        strengths: [
+          "Brave and action-oriented; strong drive",
+          "Direct honesty; clear standards",
+          "Strong crisis management; handles pressure well",
+          "Protective fighter energy; stands up for people",
+          "Fast decision-maker; doesn’t hesitate too long"
+        ],
+        watchouts: [
+          "Too harsh; words can wound",
+          "Impatient with slow progress or emotions",
+          "Conflict-prone when feeling blocked",
+          "All-or-nothing thinking; can overreact",
+          "Under stress: aggressive, rigid, or reckless"
+        ],
+        tips: [
+          "Pause 10 seconds before reacting (especially in conflict)",
+          "Aim for ‘firm but kind’ language",
+          "Channel intensity into workouts or structured goals",
+          "Check consequences: ‘What happens after I win this fight?’",
+          "Build recovery time after pushing hard"
+        ],
+        careers: [
+          "Emergency / Crisis response",
+          "Military / Police / Security",
+          "Surgery / High-stakes medical",
+          "Athletics / Coaching",
+          "Engineering (hard systems)",
+          "Litigation / Prosecutor-style law",
+          "Turnaround / Fixer roles"
+        ]
       },
-      8: { title:"Xin (辛金) — Metal(Jewel)", subtitle:"Jewel: refined standards and taste.",
-           strengths:["High quality, detail-focused", "Good at editing/finishing", "Strong sense of values"],
-           watchouts:["Perfectionism", "Self-criticism", "Can seem distant"],
-           tips:["Ship version 1, then improve", "Use deadlines to prevent over-polish", "Balance critique with appreciation"]
+
+      8: {
+        subtitle: "Jewel: refined taste and precision—excellent at polishing and completing.",
+        strengths: [
+          "High standards; strong quality control",
+          "Great eye for details, design, and editing",
+          "Good at finishing and refining outcomes",
+          "Values integrity; strong sense of what’s right",
+          "Elegant communication when confident"
+        ],
+        watchouts: [
+          "Perfectionism slows action",
+          "Self-criticism; confidence can be fragile",
+          "Can seem cold or distant when focused",
+          "Gets stuck comparing self to others",
+          "Under stress: avoids starting, over-edits, or withdraws"
+        ],
+        tips: [
+          "Ship version 1, then improve (two-step approach)",
+          "Use deadlines to stop endless polishing",
+          "Track progress, not perfection",
+          "Balance critique with appreciation (1:1 rule—one praise per critique)",
+          "Warm up socially before important conversations"
+        ],
+        careers: [
+          "Design / Styling / Art direction",
+          "Quality assurance / Testing",
+          "Branding / Luxury / Craft",
+          "Editing / Publishing",
+          "Auditing / Compliance (detail)",
+          "Data analysis (precision work)",
+          "Product refinement / QA roles"
+        ]
       },
-      9: { title:"Ren (壬水) — Water(Ocean)", subtitle:"Ocean: big mind, deep thinking.",
-           strengths:["Strategic, curious, research power", "Adaptable in uncertainty", "Sees patterns"],
-           watchouts:["Overthinking, drifting", "Avoids confrontation", "Energy scattered"],
-           tips:["Write a 3-step plan", "Decide with time limits", "Talk it out instead of holding it in"]
+
+      9: {
+        subtitle: "Ocean: big mind and deep curiosity—adaptable, strategic, and expansive.",
+        strengths: [
+          "Strong learning ability; loves research and exploration",
+          "Strategic thinking; sees patterns and hidden connections",
+          "Adaptable in uncertainty; handles change well",
+          "Creative storyteller; good at big concepts",
+          "Naturally resourceful; finds options others miss"
+        ],
+        watchouts: [
+          "Overthinking; mind doesn’t shut off",
+          "Drifting/procrastination when structure is missing",
+          "Avoids direct conflict; keeps feelings inside",
+          "Scattered focus; too many interests at once",
+          "Under stress: anxiety, indecision, and escape behaviors"
+        ],
+        tips: [
+          "Time-box decisions (e.g., 15 minutes, then choose)",
+          "Write a simple 3-step plan and execute step 1 today",
+          "Reduce options: one project per season (not ten at once)",
+          "Talk it out with a trusted person instead of carrying it alone",
+          "Use movement + sunlight to reset mental loops"
+        ],
+        careers: [
+          "Strategy / Consulting",
+          "Research / Journalism / Investigation",
+          "Product management (big-picture)",
+          "Film / Documentary / Storytelling",
+          "Business development (exploration)",
+          "Travel / Field work / Exploration",
+          "Systems thinking roles"
+        ]
       },
-      10:{ title:"Gui (癸水) — Water(Rain)", subtitle:"Rain: subtle, intuitive, and responsive.",
-           strengths:["Sensitive intuition", "Good listener and mediator", "Quiet persistence"],
-           watchouts:["Anxiety spirals", "Too passive", "Absorbs others’ moods"],
-           tips:["Protect your emotional boundaries", "Do one small action daily", "Get sunlight + movement to reset"]
+
+      10: {
+        subtitle: "Rain: subtle intuition and quiet persistence—responds deeply to people and context.",
+        strengths: [
+          "Sensitive intuition; notices small signals",
+          "Good listener and mediator; supports quietly",
+          "Consistent, persistent effort over time",
+          "Strong memory for details and emotions",
+          "Works well behind the scenes; careful and thoughtful"
+        ],
+        watchouts: [
+          "Absorbs others’ moods; emotional boundaries get thin",
+          "Anxiety spirals; fear grows when uncertain",
+          "Too passive; waits instead of initiating",
+          "Avoids confrontation; problems linger",
+          "Under stress: rumination, withdrawal, and low energy"
+        ],
+        tips: [
+          "Protect boundaries: limit exposure to draining people/content",
+          "Do one small action daily (momentum beats mood)",
+          "Use grounding: breathing, walking, warm shower, journaling",
+          "Ask directly for what you need (short, clear requests)",
+          "Build a stable routine to prevent emotional flooding"
+        ],
+        careers: [
+          "Counseling / Psychology",
+          "UX research / User interviews",
+          "Translation / Interpretation",
+          "Writing (quiet, reflective)",
+          "Data / Insight analysis",
+          "Library / Archive / Knowledge work",
+          "Mediation / Support roles"
+        ]
       }
     };
 
@@ -440,6 +729,10 @@
               <h3>Simple tips</h3>
               ${listHTML(t.tips)}
             </div>
+            <div class="box" style="grid-column: 1 / -1;">
+              <h3>Recommended careers</h3>
+              ${listHTML(t.careers)}
+            </div>
           </div>
         `);
       }catch(e){
@@ -467,9 +760,11 @@
     digitsOnly(birthMonth, 2);
     digitsOnly(birthDay, 2);
 
+    // Button-only (no auto-calc)
     calcBtn.addEventListener("click", calculate);
     resetBtn.addEventListener("click", resetAll);
 
+    // Enter key triggers search
     [birthYear, birthMonth, birthDay].forEach(el => {
       el.addEventListener("keydown", (e) => { if (e.key === "Enter") calculate(); });
     });
